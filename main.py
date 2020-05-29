@@ -87,17 +87,24 @@ class Protein():
 
 
 
-    def update_position(self, n, t):
+    def update_position(self, pos, t):
         k_b, b, b_zero, k_a, a, a_zero, k_phi, n_phi, phi, delta, r, qi, qj, a, c = self.params
-
-
-        # else:
-        #     pos_bond = self.amino(n - 1)
-        #     # bond_dist = sqrt((pos[0, i] - pos[0, i]) ^ 2 + (ya - yb) ^ 2 + (za - zb) ^ 2)
-        #     bond = self.force(type = "bond")
-        #     angle = self.force(type = "angle")
-        #     pass
-
+        mass = 1  # relative mass, if masses of atoms are different
+        for i in range(len(self.sequence)):
+            for j in range(len(pos[:, 0, 0])):
+                if i == 0 and j == 0:
+                    pos[:, 0, 0]
+                else:
+                    acc_x, acc_y = self.force(pos, i, j, type="bond") / mass
+                    distance_x = acc_x * t
+                    distance_y = acc_y * t
+                    pos[0, i, j] += distance_x
+                    pos[1, i, j] += distance_y
+        for i in range(len(self.sequence)):
+            for j in range(len(pos[:, 0, 0])):
+                acc_rad = self.force(pos, i, j, type="angle")
+                # winkelberechnung 
+        return pos
 
     def initialize_positions(self):
         structure = []
